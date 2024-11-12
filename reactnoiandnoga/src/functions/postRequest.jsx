@@ -98,7 +98,7 @@ export const addComments = async (obj) => {
   }
 };
 
-export const addusers = async (obj) => {
+export const addUsers = async (obj) => {
   const newUser = {
     ...obj,
     id: Math.random() * 5000,
