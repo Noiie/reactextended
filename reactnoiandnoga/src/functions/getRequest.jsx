@@ -1,6 +1,6 @@
 import apiRequest from "./apiRequest";
 
-const Api_Url = "http://localhost:3500/";
+const Api_Url = "http://localhost:3000/";
 
 export async function getPosts(userId) {
   try {

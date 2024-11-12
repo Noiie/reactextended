@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   getPosts,
   getTodos,
@@ -9,46 +9,44 @@ import {
   getUser,
 } from "./functions/getRequest";
 import {
-  addAlbums,
-  addComments,
-  addPosts,
-  addTodos,
-  addusers,
-} from "./functions/postRequest";
+  patchComment,
+  patchTodo,
+  patchPhoto,
+  patchAlbum,
+  postComment,
+} from "./functions/patchRequest";
+import {
+  deleteComment,
+  deleteTodos,
+  deleteAlbum,
+  deletePhoto,
+} from "./functions/deleteRequest";
+
+import Layout from "./components/Layout";
+import Login from "./pages/login/Login";
+import Register from "./pages/Register/Register";
 import "./App.css";
 
 function App() {
-  const API_URL = "http://localhost:3000/";
+  -useEffect(() => {
+    async function fetchUser() {
+      await getPosts();
+    }
+    fetchUser();
+  }, []);
 
-  // useEffect(() => {
-  //   // getPosts();
-  //   // getTodos(1);
-  //   // getAlbums(1);
-  //   // getComments(1);
-  //   // getPhotos(1);
-  //   void getUser(1);
-  // }, []);
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="login" element={<Layout />}>
+          <Route index element={<Login />} />
+        </Route>
 
-  // useEffect(() => void addTodos({ title: "title", userId: 1 }), []);
-  // useEffect(
-  //   () => void addPosts({ title: "title", userId: 1, body: "body" }),
-  //   []
-  // );
-  // useEffect(() => void addAlbums({ title: "title", userId: 1 }), []);
-
-  useEffect(
-    () =>
-      void addComments({
-        name: "noinoga",
-        email: "email",
-        body: "body",
-        userId: 1,
-      }),
-    []
+        <Route path="register" element={<Layout />}>
+          <Route index element={<Register />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
-
-  useEffect(() => void addusers({}), []);
-
-  return <></>;
 }
 export default App;
