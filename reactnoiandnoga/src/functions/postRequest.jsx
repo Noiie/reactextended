@@ -24,6 +24,8 @@
 
 // }
 
+const Api_Url = "http://localhost:3500/";
+
 export const addusers = async (obj) => {
   const id = Math.random() * 5000;
   const newUser = { ...obj, id: id };
@@ -31,11 +33,11 @@ export const addusers = async (obj) => {
   const postOptions = {
     method: "POST",
     headers: {
-      "Content-Type": `${API_URL}/users`,
+      "Content-Type": `${Api_Url}/users`,
     },
     body: JSON.stringify(newUser),
   };
-  const result = await fetch(`${API_URL}/users`, postOptions);
+  const result = await fetch(`${Api_Url}/users`, postOptions);
 };
 
 // export addTodos;
