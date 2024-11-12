@@ -1,45 +1,123 @@
 // import { apiRequest } from "apiRequest";
 
-// const addTodos = async (userId) => {}
+let API_URL = "http://localhost:3000/";
 
-// const TodoId = users.length ? users[users.length - 1].id + 1 : 1;
-// const newTodo = { id, checked: false,  };
-// const listUsers = [...users, newUser];
-// setItems(listUsers);
+export const addTodos = async (obj) => {
+  //add title+userid
 
-// const postOptions = {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": `${API_URL}/users`,
-//   },
-//   body: JSON.stringify(newUser),
-// };
-// const result = await apiRequest(`${API_URL}/users`, postOptions);
-
-// const addPosts = async (postId) => {}
-
-// const addAlbums = async (albumId) => {}
-
-// const addComments = async ({postId}) => {
-
-// }
-
-export const addusers = async (obj) => {
-  const id = Math.random() * 5000;
-  const newUser = { ...obj, id: id };
+  const newTodos = {
+    ...obj,
+    id: Math.random() * 5000,
+    completed: false,
+  };
 
   const postOptions = {
     method: "POST",
     headers: {
-      "Content-Type": `${API_URL}/users`,
+      "Content-Type": `http://localhost:3000/todos/`,
+    },
+    body: JSON.stringify(newTodos),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/todos/`, postOptions);
+    if (!response.ok) throw Error("Couldn't add to-do item");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+export const addPosts = async (obj) => {
+  const newPosts = {
+    ...obj,
+    id: Math.random() * 5000,
+  };
+
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": `http://localhost:3000/posts`,
+    },
+    body: JSON.stringify(newPosts),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/posts`, postOptions);
+    if (!response.ok) throw Error("Couldn't add post");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+export const addAlbums = async (obj) => {
+  const newAlbum = {
+    ...obj,
+    id: Math.random() * 5000,
+  };
+
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": `http://localhost:3000/albums`,
+    },
+    body: JSON.stringify(newAlbum),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/albums`, postOptions);
+    if (!response.ok) throw Error("Couldn't add post");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+export const addComments = async (obj) => {
+  const newComment = {
+    ...obj,
+    id: Math.random() * 5000,
+  };
+
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": `http://localhost:3000/comments`,
+    },
+    body: JSON.stringify(newComment),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/comments`, postOptions);
+    if (!response.ok) throw Error("Couldn't add comment");
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+export const addusers = async (obj) => {
+  const newUser = {
+    ...obj,
+    id: Math.random() * 5000,
+  };
+
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": `http://localhost:3000/users`,
     },
     body: JSON.stringify(newUser),
   };
-  const result = await fetch(`${API_URL}/users`, postOptions);
+  try {
+    const response = await fetch(`http://localhost:3000/users`, postOptions);
+    if (!response.ok)
+      throw Error("Couldn't add user. Overpopulation is a thing");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
 };
-
-// export addTodos;
-// export addPosts;
-// export addAlbums;
-// export addComments;
-// export addusers;
