@@ -1,11 +1,11 @@
-export async function deleteComment(id) {
+export async function deleteComment(commentId) {
   const postOptions = {
     method: "DELETE",
   };
 
   try {
     const response = await fetch(
-      `http://localhost:3000/comments/${id}`,
+      `http://localhost:3000/comments/${commentId}`,
       postOptions
     );
     if (!response.ok) {
