@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { getUserAtLogin } from "../../functions/getRequest";
 import { useNavigate } from "react-router-dom";
+import "../../register.css";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -38,31 +39,35 @@ function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Login</h1>
-      <label>
-        Username:
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </label>
-      <br />
-      <br />
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-      <br />
-      <button type="submit">Login</button>
-    </form>
+    <div className="wrapper">
+      <div className="formContainer">
+        <form onSubmit={handleSubmit}>
+          <h1>Login</h1>
+          <label>
+            Username:
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Password:
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <br />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
   );
 }
 

@@ -3,6 +3,7 @@ import { patchUserInfo } from "../../functions/patchRequest";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../context/currentUser";
+import "../../register.css";
 
 function RegisterInfo() {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
@@ -52,35 +53,35 @@ function RegisterInfo() {
   };
 
   return (
-    <div className="formContainer">
-      <form onSubmit={handleSubmit}>
-        <h1>We'd love to get to know you better!</h1>
-        <h2>Care to share?</h2>
+    <div className="wrapper">
+      <div className="formContainer">
+        <form onSubmit={handleSubmit}>
+          <h1>Care to share?</h1>
 
-        <label>Name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <label>Phone (10 digits):</label>
-        <input
-          type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
+          <label>Phone (10 digits):</label>
+          <input
+            type="text"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
 
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <button type="submit">Submit</button>
-      </form>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   );
 }
