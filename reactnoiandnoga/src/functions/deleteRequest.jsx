@@ -47,7 +47,7 @@ export async function deleteAlbum(id) {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/album/${id}`,
+      `http://localhost:3000/albums/${id}`,
       postOptions
     );
     if (!response.ok) {

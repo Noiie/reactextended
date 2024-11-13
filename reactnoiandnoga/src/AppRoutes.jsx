@@ -9,7 +9,9 @@ import Login from "./pages/login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import Posts from "./pages/Posts/Posts";
+import PostDetail from "./pages/Posts/PostDetail";
 import Albums from "./pages/Albums/Albums";
+import PhotosDetail from "./pages/Albums/PhotosDetail";
 import Todos from "./pages/Todos/Todos";
 import Info from "./pages/Info/Info";
 
@@ -34,10 +36,12 @@ function AppRoutes() {
 
         <Route path={`users/${currentUser.id}/albums`} element={<Layout />}>
           <Route index element={<Albums />} />
+          <Route path={`:albumId/photos`} element={<PhotosDetail />} />
         </Route>
 
         <Route path={`users/${currentUser.id}/posts`} element={<Layout />}>
           <Route index element={<Posts />} />
+          <Route path={`:postId`} element={<PostDetail />} />
         </Route>
 
         <Route path={`users/${currentUser.id}/todos`} element={<Layout />}>
