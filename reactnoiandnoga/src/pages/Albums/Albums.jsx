@@ -77,14 +77,17 @@ function Albums() {
   ));
 
   function handleChange(e) {
-    setInputText(e.target.value);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
+    const newTextInput = e.target.value;
+    setInputText(newTextInput);
     setSearchParams({ title: inputText });
     setShowResults(true);
   }
+
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   setSearchParams({ title: inputText });
+  //   setShowResults(true);
+  // }
 
   async function handleDeleteAlbums(albumID) {
     try {
@@ -116,14 +119,14 @@ function Albums() {
       {/* <button onClick={handleDeleteAlbums}>Delete album</button> */}
       <button onClick={handleAddAlbums}>Add album</button>
 
-      <form action="GET" onSubmit={handleSubmit}>
+      <form action="GET">
         <input
           placeholder="Search for albums..."
           type="text"
           value={inputText}
           onChange={handleChange}
         />
-        <button type="submit">Submit</button>
+        {/* <button type="submit">Submit</button> */}
       </form>
 
       {showResults && <h3>Results for {inputText}...</h3>}

@@ -6,6 +6,7 @@ import {
   Link,
   NavLink,
   useSearchParams,
+  Outlet,
 } from "react-router-dom";
 
 import { CurrentUserContext } from "../../context/currentUser";
@@ -22,16 +23,15 @@ import { addAlbums } from "../../functions/postRequest";
 
 import { deleteAlbum } from "../../functions/deleteRequest";
 
-import albumIcon from "../../assets/albumIcon.jpg";
-
 function Posts() {
   let [searchParams, setSearchParams] = useSearchParams();
-
   const { currentUser } = useContext(CurrentUserContext);
+  const [commentsShowed, setCommentsShowed] = useState(false);
   const [posts, setPosts] = useState([]);
   const [textInput, setTextInput] = useState("");
 
   const postsFilter = searchParams.get("title");
+  // const postsFilter = searchParams.get("title");
 
   useEffect(() => {
     async function getUsersPosts() {
@@ -50,7 +50,7 @@ function Posts() {
 
   const displayedPosts = postsFilter
     ? posts.filter((post) =>
-        posts.title.toLowerCase().includes(titleFilter.toLowerCase())
+        post.title.toLowerCase().includes(textInput.toLowerCase())
       )
     : posts;
 
@@ -59,29 +59,28 @@ function Posts() {
   }
 
   const postsElements = displayedPosts.map((post) => (
-    <>
-      <NavLink
-        to={`${post.id}`}
-        key={`post-${post.id}`}
-        className="post-container"
-      >
-        <div className="post-details">
-          <p>Title: {post.title}</p>
-          <p>Id: {post.id}</p>
-        </div>
-        {/* <img src={albumIcon} alt="album icon" /> */}
-      </NavLink>
-    </>
+    <div key={`post-${post.id}`} className="post-container">
+      <div className="post-details">
+        <p>Title: {post.title}</p>
+        <p>Id: {post.id}</p>
+        <NavLink to={`${post.id}/comments`}>
+          {commentsShowed ? "Hide comments" : "Show comments"}
+        </NavLink>
+      </div>
+
+      <Outlet context={{ currentPostId: post.id }} />
+    </div>
   ));
+
+  function handleInputChange(e) {
+    const newTextInput = e.target.value;
+    setTextInput(newTextInput);
+    setSearchParams({ title: newTextInput });
+  }
 
   return (
     <div>
-      <input
-        type="text"
-        value={textInput}
-        onChange={(e) => setTextInput(e.target.value)}
-      />
-
+      <input type="text" value={textInput} onChange={handleInputChange} />
       <div>{postsElements}</div>
     </div>
   );
