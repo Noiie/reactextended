@@ -1,37 +1,20 @@
 import { useContext, useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useSearchParams,
-  Outlet,
-} from "react-router-dom";
+import { NavLink, useSearchParams, Outlet } from "react-router-dom";
 
 import { CurrentUserContext } from "../../context/currentUser";
-import {
-  getPosts,
-  getTodos,
-  getAlbums,
-  getComments,
-  getPhotos,
-  getUser,
-} from "../../functions/getRequest";
-
-import { addAlbums } from "../../functions/postRequest";
-
-import { deleteAlbum } from "../../functions/deleteRequest";
+import { getPosts, getComments } from "../../functions/getRequest";
 
 function Posts() {
   let [searchParams, setSearchParams] = useSearchParams();
   const { currentUser } = useContext(CurrentUserContext);
-  const [commentsShowed, setCommentsShowed] = useState(false);
+  const [commentsVisibility, setCommentsVisibility] = useState({});
+  const [comments, setComments] = useState({});
+  const [postsVisibility, setPostsVisibility] = useState({});
+  console.log("comments: ", comments);
   const [posts, setPosts] = useState([]);
   const [textInput, setTextInput] = useState("");
 
   const postsFilter = searchParams.get("title");
-  // const postsFilter = searchParams.get("title");
 
   useEffect(() => {
     async function getUsersPosts() {
@@ -39,6 +22,18 @@ function Posts() {
         const response = await getPosts(currentUser.id);
         console.log(response);
         setPosts(response);
+        setCommentsVisibility(
+          response.reduce((acc, post) => {
+            acc[post.id] = false;
+            return acc;
+          }, {})
+        );
+        setPostsVisibility(
+          response.reduce((acc, post) => {
+            acc[post.id] = false;
+            return acc;
+          }, {})
+        );
       } catch (err) {
         console.error(err);
         alert(err.message);
@@ -58,17 +53,56 @@ function Posts() {
     return <div>Loading...</div>;
   }
 
+  // comments[post.id][0].name
   const postsElements = displayedPosts.map((post) => (
     <div key={`post-${post.id}`} className="post-container">
       <div className="post-details">
-        <p>Title: {post.title}</p>
+        <h4>{post.title}</h4>
+        {postsVisibility[post.id] && <p>Body: {post.body}</p>}
         <p>Id: {post.id}</p>
-        <NavLink to={`${post.id}/comments`}>
-          {commentsShowed ? "Hide comments" : "Show comments"}
-        </NavLink>
+        <button
+          onClick={() =>
+            setPostsVisibility((prev) => ({
+              ...prev,
+              [post.id]: !prev[post.id],
+            }))
+          }
+        >
+          {postsVisibility[post.id] ? "Hide post" : "Show post"}
+        </button>
+        {postsVisibility[post.id] && (
+          <button
+            onClick={async () => {
+              const thisComments = await getComments(post.id);
+              // console.log(thisComments);
+              setComments((prev) => ({ ...prev, [post.id]: thisComments }));
+              setCommentsVisibility((prev) => ({
+                ...prev,
+                [post.id]: !prev[post.id],
+              }));
+            }}
+          >
+            {commentsVisibility[post.id] ? "Hide comments" : "Show comments"}
+          </button>
+        )}
       </div>
 
-      <Outlet context={{ currentPostId: post.id }} />
+      {commentsVisibility[post.id] && comments[post.id] && (
+        <>
+          {" "}
+          hi
+          {comments[post.id].map((comment) => {
+            console.log(comment);
+            return (
+              <div key={`comment-${comment.id}`}>
+                <h5>Name: {comment.name}</h5>
+                <p>Body: {comment.body}</p>
+                <p>Email: {comment.email}</p>
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   ));
 
@@ -80,8 +114,16 @@ function Posts() {
 
   return (
     <div>
-      <input type="text" value={textInput} onChange={handleInputChange} />
-      <div>{postsElements}</div>
+      <h3>Your Posts:</h3>
+      <input
+        placeholder="Search for posts..."
+        type="text"
+        value={textInput}
+        onChange={handleInputChange}
+      />
+      <div className="All-posts-container">
+        <div>{postsElements}</div>
+      </div>
     </div>
   );
 }

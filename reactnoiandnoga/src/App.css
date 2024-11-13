@@ -126,6 +126,20 @@ main {
   border-radius: 5px; /* Rounds the image edges slightly */
 }
 
+.All-posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  width: 90vw;
+}
+
+.post-container {
+  background-color: gray;
+  border: 1px solid black;
+  margin-bottom: 10px;
+}
+
 footer {
   background-color: #fff0cb;
   position: fixed;

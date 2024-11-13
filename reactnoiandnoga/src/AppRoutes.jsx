@@ -43,7 +43,7 @@ function AppRoutes() {
 
         <Route path={`users/${currentUser.id}/posts`} element={<Layout />}>
           <Route path="" element={<Posts />}>
-            <Route path={`:postId/comments`} element={<PostComments />} />
+            {/* <Route path={`:postId/comments`} element={<PostComments />} /> */}
           </Route>
         </Route>
 
