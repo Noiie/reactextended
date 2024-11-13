@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import CurrentUserContextProvider from "./context/currentUser";
+import {
+  CurrentUserContextProvider,
+  CurrentUserContext,
+} from "./context/currentUser";
 import {
   getPosts,
   getTodos,
@@ -30,18 +33,13 @@ import {
   addUsers,
 } from "./functions/postRequest";
 
-import Layout from "./components/Layout";
-import LayoutSign from "./components/LayoutSign";
-import Login from "./pages/login/Login";
-import Register from "./pages/Register/Register";
-import Home from "./pages/Home/Home";
-import Posts from "./pages/Posts/Posts";
-import Albums from "./pages/Albums/Albums";
-import Todos from "./pages/Todos/Todos";
-import Info from "./pages/Info/Info";
+import AppRoutes from "./AppRoutes";
 import "./App.css";
 
 function App() {
+  // console.log(useContext(CurrentUserContext));
+  // const { currentUser } = useContext(CurrentUserContext);
+
   // -useEffect(() => {
   //   async function fetchUser() {
   //     await getPosts();
@@ -51,21 +49,7 @@ function App() {
 
   return (
     <CurrentUserContextProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="login" element={<LayoutSign />}>
-            <Route index element={<Login />} />
-          </Route>
-
-          <Route path="register" element={<LayoutSign />}>
-            <Route index element={<Register />} />
-          </Route>
-
-          <Route path="home" element={<Layout />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <AppRoutes />
     </CurrentUserContextProvider>
   );
 }
