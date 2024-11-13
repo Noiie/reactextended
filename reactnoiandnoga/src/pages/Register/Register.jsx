@@ -12,7 +12,9 @@ const Register = () => {
   const [verifyPassword, setVerifyPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  async function handleRegister(e) {
+    e.preventDefault();
+
     // check if passwords match
     if (password !== verifyPassword) {
       alert("Passwords don't match. retry.");
@@ -59,30 +61,34 @@ const Register = () => {
       alert("Error during registration");
       console.error(err.message);
     }
-  };
+  }
 
   return (
-    <div className="formContainer">
-      <h2>Register</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        value={verifyPassword}
-        onChange={(e) => setVerifyPassword(e.target.value)}
-      />
-      <button onClick={handleRegister}>Submit</button>
+    <div className="wrapper">
+      <div className="formContainer">
+        <form onSubmit={handleRegister}>
+          <h1>Register</h1>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={verifyPassword}
+            onChange={(e) => setVerifyPassword(e.target.value)}
+          />
+          <button onClick={handleRegister}>Submit</button>
+        </form>
+      </div>
     </div>
   );
 };

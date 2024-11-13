@@ -102,7 +102,7 @@ export const addUsers = async (obj) => {
   const postOptions = {
     method: "POST",
     headers: {
-      "Content-Type": `http://localhost:3000/users`,
+      "Content-Type": `application/json`,
     },
     body: JSON.stringify(newUser),
   };
