@@ -3,7 +3,7 @@ import { CurrentUserContext } from "../../context/currentUser";
 
 function Home() {
   const { currentUser } = useContext(CurrentUserContext);
-  return <div>{currentUser}</div>;
+  return <div>{currentUser.name}</div>;
 }
 
 export default Home;

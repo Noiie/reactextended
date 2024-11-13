@@ -34,7 +34,11 @@ import Layout from "./components/Layout";
 import LayoutSign from "./components/LayoutSign";
 import Login from "./pages/login/Login";
 import Register from "./pages/Register/Register";
-import Home from "./pages/home/Home";
+import Home from "./pages/Home/Home";
+import Posts from "./pages/Posts/Posts";
+import Albums from "./pages/Albums/Albums";
+import Todos from "./pages/Todos/Todos";
+import Info from "./pages/Info/Info";
 import "./App.css";
 
 function App() {
