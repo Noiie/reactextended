@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import LayoutSign from "./components/LayoutSign";
 import Login from "./pages/login/Login";
 import Register from "./pages/Register/Register";
+import Register2 from "./pages/Register/Register2";
 import Home from "./pages/Home/Home";
 import Posts from "./pages/Posts/Posts";
 import Albums from "./pages/Albums/Albums";
@@ -26,6 +27,7 @@ function AppRoutes() {
 
         <Route path="register" element={<LayoutSign />}>
           <Route index element={<Register />} />
+          <Route path={`2`} element={<Register2 />} />
         </Route>
 
         <Route path="home" element={<Layout />}>

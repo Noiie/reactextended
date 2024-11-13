@@ -112,3 +112,25 @@ export async function patchAlbum(id, updatedData) {
     return err.message;
   }
 }
+
+export async function patchUserInfo(id, updatedInfo) {
+  const patchOptions = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": `application/json`,
+    },
+    body: JSON.stringify(updatedInfo),
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/users/${id}`,
+      patchOptions
+    );
+    if (!response.ok) throw Error("Couldn't update user information.");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+}

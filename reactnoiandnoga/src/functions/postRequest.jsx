@@ -7,7 +7,6 @@ export const addTodos = async (obj) => {
 
   const newTodos = {
     ...obj,
-    id: Math.random() * 5000,
     completed: false,
   };
 
@@ -31,7 +30,6 @@ export const addTodos = async (obj) => {
 export const addPosts = async (obj) => {
   const newPosts = {
     ...obj,
-    id: Math.random() * 5000,
   };
 
   const postOptions = {
@@ -54,7 +52,6 @@ export const addPosts = async (obj) => {
 export const addAlbums = async (obj) => {
   const newAlbum = {
     ...obj,
-    id: Math.random() * 5000,
   };
 
   const postOptions = {
@@ -77,7 +74,6 @@ export const addAlbums = async (obj) => {
 export const addComments = async (obj) => {
   const newComment = {
     ...obj,
-    id: Math.random() * 5000,
   };
 
   const postOptions = {
@@ -101,7 +97,6 @@ export const addComments = async (obj) => {
 export const addUsers = async (obj) => {
   const newUser = {
     ...obj,
-    id: Math.random() * 5000,
   };
 
   const postOptions = {
