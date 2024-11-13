@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { getUserAtLogin } from "../../functions/getRequest";
 import { useNavigate } from "react-router-dom";
+import { CurrentUserContext } from "../../context/currentUser";
+
 import "../../register.css";
 
 function Login() {
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -30,6 +33,7 @@ function Login() {
           "loggedInUser",
           JSON.stringify(existingUserInDataBase)
         );
+        setCurrentUser(existingUserInDataBase);
         navigate("/home");
       }
     } catch (err) {

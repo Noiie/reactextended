@@ -1,14 +1,29 @@
 import { useContext } from "react";
-import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../context/currentUser";
 import logo from "../assets/Noiga.png";
 
 function Header() {
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const navigate = useNavigate();
+
+  const handleLogOut = async () => {
+    try {
+      localStorage.clear();
+      setCurrentUser(null);
+      navigate("login");
+      // location.reload();
+      alert("Logged out, come back soon :)");
+    } catch (err) {
+      console.error("Failed to log out:", err);
+      alert("Failed to log out");
+    }
+  };
+
   return (
     <header className="header-container">
       <NavLink to="/home">
-        <img id="logo" src={logo} alt="" />
+        <img id="logo" src={logo} alt="Logo" />
       </NavLink>
       <nav>
         <NavLink
@@ -37,6 +52,7 @@ function Header() {
         </NavLink>
         <NavLink
           to="/login"
+          onClick={handleLogOut}
           className={({ isActive }) =>
             (isActive ? "activeNav" : "") + " navLink"
           }

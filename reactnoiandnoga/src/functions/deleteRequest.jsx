@@ -81,3 +81,24 @@ export async function deletePhoto(id) {
     return err.message;
   }
 }
+
+export async function deleteUser(id) {
+  const postOptions = {
+    method: "DELETE",
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/users/${id}`,
+      postOptions
+    );
+    if (!response.ok) {
+      throw new Error("couldn't delete  user");
+    } else {
+      return "User deleted successfully";
+    }
+  } catch (err) {
+    console.log(err.message);
+    return err.message;
+  }
+}
