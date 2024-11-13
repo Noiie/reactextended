@@ -14,6 +14,19 @@ export async function getPosts(userId) {
   }
 }
 
+export async function getPost(postId) {
+  try {
+    const request = await fetch(`http://localhost:3000/posts?id=${postId}`);
+    if (!request.ok) throw Error("Did not get expected data");
+    const requestJson = await request.json();
+    return requestJson;
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  } finally {
+  }
+}
+
 export async function getComments(postId) {
   try {
     const request = await fetch(

@@ -10,7 +10,7 @@ import Register from "./pages/Register/Register";
 import Register2 from "./pages/Register/Register2";
 import Home from "./pages/Home/Home";
 import Posts from "./pages/Posts/Posts";
-import PostDetail from "./pages/Posts/PostDetail";
+import PostComments from "./pages/Posts/PostComments";
 import Albums from "./pages/Albums/Albums";
 import PhotosDetail from "./pages/Albums/PhotosDetail";
 import Todos from "./pages/Todos/Todos";
@@ -42,8 +42,9 @@ function AppRoutes() {
         </Route>
 
         <Route path={`users/${currentUser.id}/posts`} element={<Layout />}>
-          <Route index element={<Posts />} />
-          <Route path={`:postId`} element={<PostDetail />} />
+          <Route path="" element={<Posts />}>
+            <Route path={`:postId/comments`} element={<PostComments />} />
+          </Route>
         </Route>
 
         <Route path={`users/${currentUser.id}/todos`} element={<Layout />}>
