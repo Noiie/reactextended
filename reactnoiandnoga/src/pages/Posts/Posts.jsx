@@ -1,37 +1,28 @@
 import { useContext, useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useSearchParams,
-  Outlet,
-} from "react-router-dom";
+import { NavLink, useSearchParams, Outlet } from "react-router-dom";
 
 import { CurrentUserContext } from "../../context/currentUser";
-import {
-  getPosts,
-  getTodos,
-  getAlbums,
-  getComments,
-  getPhotos,
-  getUser,
-} from "../../functions/getRequest";
-
-import { addAlbums } from "../../functions/postRequest";
-
-import { deleteAlbum } from "../../functions/deleteRequest";
+import { getPosts, getComments } from "../../functions/getRequest";
+import { deleteComment } from "../../functions/deleteRequest";
+import { addComments } from "../../functions/postRequest";
+import { patchComment } from "../../functions/patchRequest";
+import PostComments from "./PostComments";
 
 function Posts() {
   let [searchParams, setSearchParams] = useSearchParams();
   const { currentUser } = useContext(CurrentUserContext);
-  const [commentsShowed, setCommentsShowed] = useState(false);
+  const [commentsVisibility, setCommentsVisibility] = useState({});
+  const [comments, setComments] = useState({});
+  const [postsVisibility, setPostsVisibility] = useState({});
+  const [commentsEditStatus, setCommentsEditStatus] = useState({});
   const [posts, setPosts] = useState([]);
   const [textInput, setTextInput] = useState("");
+  const [commentsNames, setCommentsNames] = useState({});
+  console.log("commentsNames: ", commentsNames);
+  const [commentsBody, setCommentsBody] = useState({});
+  console.log("commentsBody: ", commentsBody);
 
   const postsFilter = searchParams.get("title");
-  // const postsFilter = searchParams.get("title");
 
   useEffect(() => {
     async function getUsersPosts() {
@@ -39,6 +30,18 @@ function Posts() {
         const response = await getPosts(currentUser.id);
         console.log(response);
         setPosts(response);
+        setCommentsVisibility(
+          response.reduce((acc, post) => {
+            acc[post.id] = false;
+            return acc;
+          }, {})
+        );
+        setPostsVisibility(
+          response.reduce((acc, post) => {
+            acc[post.id] = false;
+            return acc;
+          }, {})
+        );
       } catch (err) {
         console.error(err);
         alert(err.message);
@@ -58,19 +61,213 @@ function Posts() {
     return <div>Loading...</div>;
   }
 
-  const postsElements = displayedPosts.map((post) => (
-    <div key={`post-${post.id}`} className="post-container">
-      <div className="post-details">
-        <p>Title: {post.title}</p>
-        <p>Id: {post.id}</p>
-        <NavLink to={`${post.id}/comments`}>
-          {commentsShowed ? "Hide comments" : "Show comments"}
-        </NavLink>
-      </div>
+  // comments[post.id][0].name
+  const postsElements = displayedPosts.map((post) => {
+    // console.log(post);
+    return (
+      <div key={`post-${post.id}`} className="post-container">
+        <div className="post-details">
+          <h4>{post.title}</h4>
+          {postsVisibility[post.id] && <p>Body: {post.body}</p>}
+          <p>Id: {post.id}</p>
+          <button
+            onClick={() =>
+              setPostsVisibility((prev) => ({
+                ...prev,
+                [post.id]: !prev[post.id],
+              }))
+            }
+          >
+            {postsVisibility[post.id] ? "Hide post" : "Show post"}
+          </button>
 
-      <Outlet context={{ currentPostId: post.id }} />
-    </div>
-  ));
+          {postsVisibility[post.id] && (
+            <button
+              onClick={async () => {
+                const thisComments = await getComments(post.id);
+                setComments((prev) => ({ ...prev, [post.id]: thisComments }));
+                setCommentsVisibility((prev) => ({
+                  ...prev,
+                  [post.id]: !prev[post.id],
+                }));
+                setCommentsEditStatus((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = false;
+                    return acc;
+                  }, {}),
+                }));
+                setCommentsNames((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = comment.name;
+                    return acc;
+                  }, {}),
+                }));
+                setCommentsBody((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = comment.body;
+                    return acc;
+                  }, {}),
+                }));
+              }}
+            >
+              {commentsVisibility[post.id] ? "Hide comments" : "Show comments"}
+            </button>
+          )}
+        </div>
+
+        {commentsVisibility[post.id] && comments[post.id] && (
+          <>
+            {
+              <button onClick={() => handleAddComment(post.id)}>
+                Add comment
+              </button>
+            }
+            {comments[post.id].map((comment) => {
+              // console.log(comment);
+              return (
+                <div
+                  key={`comment-${comment.id}`}
+                  className="comment-container"
+                >
+                  {commentsEditStatus[comment.id] ? (
+                    <h5>
+                      Name:{" "}
+                      <input
+                        type="text"
+                        value={commentsNames[comment.id]}
+                        onChange={(e) => {
+                          setCommentsNames((prev) => ({
+                            ...prev,
+                            [comment.id]: e.target.value,
+                          }));
+                        }}
+                      />
+                    </h5>
+                  ) : (
+                    <h5>Name: {commentsNames[comment.id]}</h5>
+                  )}
+                  {commentsEditStatus[comment.id] ? (
+                    <h5>
+                      Body:{" "}
+                      <input
+                        type="text"
+                        value={commentsBody[comment.id]}
+                        onChange={(e) => {
+                          setCommentsBody((prev) => ({
+                            ...prev,
+                            [comment.id]: e.target.value,
+                          }));
+                        }}
+                      />
+                    </h5>
+                  ) : (
+                    <h5>Body: {commentsBody[comment.id]}</h5>
+                  )}
+                  <p>Email: {comment.email}</p>
+                  {
+                    <button
+                      onClick={() => handleDeleteComment(comment.id, post.id)}
+                    >
+                      Delete comment
+                    </button>
+                  }
+                  {currentUser.email === comment.email &&
+                    !commentsEditStatus[comment.id] && (
+                      <button
+                        onClick={() => {
+                          setCommentsEditStatus((prev) => ({
+                            ...prev,
+                            [comment.id]: true,
+                          }));
+                        }}
+                      >
+                        Edit comment
+                      </button>
+                    )}
+                  {currentUser.email === comment.email &&
+                    commentsEditStatus[comment.id] && (
+                      <button
+                        onClick={() => {
+                          setCommentsEditStatus((prev) => ({
+                            ...prev,
+                            [comment.id]: false,
+                          }));
+                          patchComment(comment.id, {
+                            name: commentsNames[comment.id],
+                            body: commentsBody[comment.id],
+                          });
+                        }}
+                      >
+                        Save
+                      </button>
+                    )}
+                </div>
+              );
+            })}
+          </>
+        )}
+      </div>
+    );
+  });
+
+  async function handleEditComment(commentId) {
+    try {
+      const updatedComment = await patchComment(commentId);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  }
+
+  async function handleAddComment(postId) {
+    console.log(postId);
+    const thisPostId = postId;
+    const thisEmail = currentUser.email;
+    const commentName = prompt("Name");
+    const commentBody = prompt("Body");
+    try {
+      const response = await addComments({
+        postId: thisPostId,
+        email: thisEmail,
+        name: commentName ? commentName : "",
+        body: commentBody ? commentBody : "",
+      });
+      console.log(response);
+      setComments((prev) => ({
+        ...prev,
+        [postId]: [...prev[postId], response],
+      }));
+      setCommentsNames((prev) => ({
+        ...prev,
+        [response.id]: commentName, // Add the new comment ID and name
+      }));
+      setCommentsBody((prev) => ({
+        ...prev,
+        [response.id]: commentBody, // Add the new comment ID and body
+      }));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  }
+
+  async function handleDeleteComment(commentId, postId) {
+    console.log(commentId);
+    try {
+      const response = deleteComment(commentId);
+      console.log(comments);
+      setComments((prev) => ({
+        ...prev,
+        [postId]: prev[postId].filter((comment) => comment.id !== commentId),
+      }));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  }
 
   function handleInputChange(e) {
     const newTextInput = e.target.value;
@@ -80,8 +277,16 @@ function Posts() {
 
   return (
     <div>
-      <input type="text" value={textInput} onChange={handleInputChange} />
-      <div>{postsElements}</div>
+      <h3>Your Posts:</h3>
+      <input
+        placeholder="Search for posts..."
+        type="text"
+        value={textInput}
+        onChange={handleInputChange}
+      />
+      <div className="All-posts-container">
+        <div>{postsElements}</div>
+      </div>
     </div>
   );
 }

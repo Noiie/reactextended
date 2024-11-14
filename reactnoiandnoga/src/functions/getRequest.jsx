@@ -14,6 +14,19 @@ export async function getPosts(userId) {
   }
 }
 
+export async function getAllPosts() {
+  try {
+    const request = await fetch(`http://localhost:3000/posts`);
+    if (!request.ok) throw Error("Did not get expected data");
+    const requestJson = await request.json();
+    return requestJson;
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  } finally {
+  }
+}
+
 export async function getPost(postId) {
   try {
     const request = await fetch(`http://localhost:3000/posts?id=${postId}`);
@@ -102,6 +115,19 @@ export async function getPhotos(albumId, start, limit) {
 export async function getUser(userId) {
   try {
     const request = await fetch(`http://localhost:3000/users?id=${userId}`);
+    if (!request.ok) throw Error("Did not get expected data");
+    const requestJson = await request.json();
+    return requestJson;
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  } finally {
+  }
+}
+
+export async function getUsers() {
+  try {
+    const request = await fetch(`http://localhost:3000/users`);
     if (!request.ok) throw Error("Did not get expected data");
     const requestJson = await request.json();
     return requestJson;

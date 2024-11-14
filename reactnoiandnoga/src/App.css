@@ -78,6 +78,12 @@ main {
   font-weight: 500;
 }
 
+/* .disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+} */
+
 #Albums h1 {
   font-size: 2rem;
   margin-bottom: 20px;
@@ -124,6 +130,20 @@ main {
   height: 50px;
   width: 50px;
   border-radius: 5px; /* Rounds the image edges slightly */
+}
+
+.All-posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  width: 90vw;
+}
+
+.post-container {
+  background-color: gray;
+  border: 1px solid black;
+  margin-bottom: 10px;
 }
 
 footer {

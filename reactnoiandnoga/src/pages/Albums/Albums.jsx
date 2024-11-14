@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 
 import { CurrentUserContext } from "../../context/currentUser";
+import { patchAlbum } from "../../functions/patchRequest";
 import {
   getPosts,
   getTodos,
@@ -32,6 +33,9 @@ function Albums() {
   const [inputText, setInputText] = useState("");
   const [error, setError] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [albumsEditStatus, setAlbumsEditStatus] = useState({});
+  const [titleText, setTitleText] = useState("");
+  console.log("titleText: ", titleText);
 
   const titleFilter = searchParams.get("title");
 
@@ -41,6 +45,18 @@ function Albums() {
         const response = await getAlbums(currentUser.id);
         setAlbums(response);
         console.log(response);
+        setTitleText(
+          response.reduce((acc, album) => {
+            acc[album.id] = album.title;
+            return acc;
+          }, {})
+        );
+        setAlbumsEditStatus(
+          response.reduce((acc, album) => {
+            acc[album.id] = false;
+            return acc;
+          }, {})
+        );
       } catch (err) {
         setError(err.message);
       }
@@ -50,9 +66,12 @@ function Albums() {
   }, []);
 
   const displayedAlbums = titleFilter
-    ? albums.filter((album) =>
-        album.title.toLowerCase().includes(titleFilter.toLowerCase())
-      )
+    ? albums.filter((album) => {
+        album = album.title ? album : {};
+        console.log(album.title);
+        console.log(inputText);
+        return album.title.toLowerCase().includes(inputText.toLowerCase());
+      })
     : albums;
 
   if (albums.length === 0) {
@@ -60,34 +79,66 @@ function Albums() {
   }
 
   const albumsElements = displayedAlbums.map((album) => (
-    <>
+    <div key={`album-${album.id}`}>
       <NavLink
         to={`${album.id}/photos`}
         key={`album-${album.id}`}
-        className="album-container"
+        className={`album-container ${
+          albumsEditStatus[album.id] ? "disabled" : ""
+        }`}
+        onClick={(e) => {
+          if (albumsEditStatus[album.id]) e.preventDefault();
+        }}
       >
         <div className="album-details">
-          <p>Title: {album.title}</p>
+          {albumsEditStatus[album.id] ? (
+            <p>
+              Title:{" "}
+              <input
+                type="text"
+                value={titleText[album.id]}
+                onChange={(e) => {
+                  setTitleText((prev) => ({
+                    ...prev,
+                    [album.id]: e.target.value,
+                  }));
+                }}
+              />
+              <button
+                onClick={() => {
+                  setAlbumsEditStatus((prev) => ({
+                    ...prev,
+                    [album.id]: false,
+                  }));
+                  const newTitle = titleText[album.id];
+                  patchAlbum(album.id, { title: newTitle });
+                }}
+              >
+                Save
+              </button>
+            </p>
+          ) : (
+            <p>Title: {titleText[album.id]}</p>
+          )}
           <p>Id: {album.id}</p>
         </div>
         <img src={albumIcon} alt="album icon" />
       </NavLink>
       <button onClick={() => handleDeleteAlbums(album.id)}>Delete album</button>
-    </>
+      <button onClick={() => handleEditAlbums(album.id)}>Edit album</button>
+    </div>
   ));
+
+  function handleEditAlbums(albumId) {
+    setAlbumsEditStatus((prev) => ({ ...prev, [albumId]: true }));
+  }
 
   function handleChange(e) {
     const newTextInput = e.target.value;
     setInputText(newTextInput);
-    setSearchParams({ title: inputText });
+    setSearchParams({ title: newTextInput });
     setShowResults(true);
   }
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   setSearchParams({ title: inputText });
-  //   setShowResults(true);
-  // }
 
   async function handleDeleteAlbums(albumID) {
     try {
@@ -116,7 +167,6 @@ function Albums() {
     <div id="Albums">
       <h1>Your albums:</h1>
 
-      {/* <button onClick={handleDeleteAlbums}>Delete album</button> */}
       <button onClick={handleAddAlbums}>Add album</button>
 
       <form action="GET">
@@ -126,7 +176,6 @@ function Albums() {
           value={inputText}
           onChange={handleChange}
         />
-        {/* <button type="submit">Submit</button> */}
       </form>
 
       {showResults && <h3>Results for {inputText}...</h3>}

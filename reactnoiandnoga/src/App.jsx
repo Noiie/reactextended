@@ -17,7 +17,6 @@ import {
   patchTodo,
   patchPhoto,
   patchAlbum,
-  postComment,
 } from "./functions/patchRequest";
 import {
   deleteComment,
