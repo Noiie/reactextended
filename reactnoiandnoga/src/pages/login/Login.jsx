@@ -7,6 +7,7 @@ import "../../register.css";
 
 function Login() {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  console.log("currentUser: ", currentUser);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
