@@ -48,11 +48,15 @@
 
 .post-container,
 .comment-container {
-  background: #af7a1f;
+  background: #e6c895;
   padding: 1.5rem;
   border-radius: 8px;
   color: #333;
   margin-top: 1rem;
+}
+
+.post-container > {
+  text-align: left;
 }
 
 .post-details h4,
@@ -60,6 +64,7 @@
   font-size: 1.2rem;
   color: #211f1f;
   margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .post-details p,

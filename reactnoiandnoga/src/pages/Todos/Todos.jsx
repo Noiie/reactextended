@@ -99,10 +99,10 @@ function Todos() {
   };
 
   // sort by criteria
-  const sortedTodos = [...todos]; //copy, refrence of arr
+  const sortedTodos = [...todos];
   switch (orderCriteria) {
     case "id":
-      sortedTodos.sort((todoA, todoB) => todoA.id - todoB.id); //todoA.id<todoB.id (negative), todoA before todoB
+      sortedTodos.sort((todoA, todoB) => todoA.id - todoB.id); //todoA.id<todoB.id (-), todoA before todoB
       break;
     case "alphabetical":
       sortedTodos.sort((todoA, todoB) =>
@@ -193,30 +193,7 @@ function Todos() {
         </select>
 
         {/* Todos List */}
-        <ul className="todosList">
-          {filteredTodos.map((todo) => (
-            <li key={todo.id} className="todoItem">
-              <span className="todoId">{todo.id}</span>
-              <input
-                type="text"
-                value={todo.title}
-                onChange={(e) => functionToUpdateTodo(todo.id, e.target.value)}
-                className="todoTitleInput"
-              />
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() =>
-                  functionToChangeCompletionStatus(todo.id, todo.completed)
-                }
-                className="todoCheckbox"
-              />
-              <button onClick={() => functionToDeleteTodo(todo.id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        <ul className="todosList">{renderTodoItems(filteredTodos)}</ul>
       </div>
     </div>
   );

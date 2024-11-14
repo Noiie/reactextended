@@ -125,7 +125,7 @@ function Posts() {
             </button>
           )}
           <button onClick={() => handleDeletePost(post.id)}>Delete Post</button>
-          <button onClick={() => handleEditPost(post.id)}>Edit Post</button>
+          {/* <button onClick={() => handleEditPost(post.id)}>Edit Post</button> */}
         </div>
 
         {commentsVisibility[post.id] && comments[post.id] && (

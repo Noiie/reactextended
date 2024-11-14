@@ -4,6 +4,7 @@
   padding: 0%;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 .site-wrapper {
@@ -141,8 +142,26 @@ main {
   width: 90vw;
 }
 
+.All-posts-container {
+  margin: auto;
+  width: 80vw;
+}
+
+.ViewPosts {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.search-home {
+  position: relative;
+  width: 80vw;
+  left: 10vw;
+}
+
 .post-container {
-  background-color: gray;
+  background-color: #af7a1f;
   border: 1px solid black;
   margin-bottom: 10px;
 }

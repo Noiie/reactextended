@@ -26,6 +26,8 @@ import { patchPhoto } from "../../functions/patchRequest";
 
 function PhotosDetail() {
   let { albumId } = useParams();
+  albumId = albumId.toString();
+  console.log("albumId: ", albumId);
   const [albumTitle, setAlbumTitle] = useState("Albummmm");
   const [photos, setPhotos] = useState([]);
   const [photosIndex, setPhotosIndex] = useState(0);
@@ -39,6 +41,7 @@ function PhotosDetail() {
     async function albumDetail() {
       try {
         const thisAlbum = await getAlbum(albumId);
+        console.log("thisAlbum: ", thisAlbum);
         setAlbumTitle(thisAlbum.title);
         const responsePhotos = await getPhotos(albumId, photosIndex, 10);
         console.log("responsePhotos: ", responsePhotos);

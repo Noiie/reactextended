@@ -287,8 +287,9 @@ function Home() {
 
   return (
     <div>
-      <h3>View Posts:</h3>
+      <h3 className="ViewPosts">View Posts:</h3>
       <input
+        className="search-home"
         placeholder="Search for posts..."
         type="text"
         value={textInput}

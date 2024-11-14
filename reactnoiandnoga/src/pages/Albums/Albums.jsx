@@ -28,6 +28,7 @@ import albumIcon from "../../assets/albumIcon.jpg";
 function Albums() {
   let [searchParams, setSearchParams] = useSearchParams();
   const { currentUser } = useContext(CurrentUserContext);
+  console.log("currentUser: ", currentUser);
 
   const [albums, setAlbums] = useState([]);
   const [inputText, setInputText] = useState("");
@@ -42,7 +43,10 @@ function Albums() {
   useEffect(() => {
     async function getUsersPosts() {
       try {
-        const response = await getAlbums(currentUser.id);
+        console.log("current user in getAlbums: ", currentUser);
+        console.log("current user id: ", currentUser.id);
+        const response = await getAlbums(`${currentUser.id}`);
+        console.log("response: ", response);
         setAlbums(response);
         console.log(response);
         setTitleText(
@@ -161,6 +165,7 @@ function Albums() {
       const newAlbum = await addAlbums({
         title: title,
         userId: currentUser.id,
+        id: Math.floor(Math.random() * 10000000),
       });
       setAlbums((prev) => [...prev, newAlbum]);
       setTitleText((prev) => ({ ...prev, [newAlbum.id]: title }));
