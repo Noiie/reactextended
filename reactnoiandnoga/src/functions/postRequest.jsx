@@ -3,8 +3,6 @@
 let API_URL = "http://localhost:3000/";
 
 export const addTodos = async (obj) => {
-  //add title+userid
-
   const newTodos = {
     ...obj,
     completed: false,
