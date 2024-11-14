@@ -4,6 +4,7 @@ import { getTodos } from "../../functions/getRequest";
 import { deleteTodos } from "../../functions/deleteRequest";
 import { patchTodo } from "../../functions/patchRequest";
 import { addTodos } from "../../functions/postRequest";
+import "../../Todos.css";
 
 function Todos() {
   const { currentUser } = useContext(CurrentUserContext);
@@ -159,41 +160,66 @@ function Todos() {
   }
 
   return (
-    <div>
-      <h1>Todos</h1>
-      <br />
-      {/* Add */}
-      <input
-        type="text"
-        value={newTodoName}
-        onChange={(e) => setNewTodoName(e.target.value)}
-        placeholder="New todo"
-      />
-      <button onClick={functionToAddTodo}>Add Todo</button>
-      <br />
-      <br />
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search by ID/title/completion"
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <br />
-      <br />
-      {/* Sort */}
-      <select
-        onChange={(e) => setOrderCriteria(e.target.value)}
-        value={orderCriteria}
-      >
-        <option value="id">sort by ID</option>
-        <option value="alphabetical">a-z</option>
-        <option value="completed">sort by completion</option>
-        <option value="random">shuffle</option>
-      </select>
-      <br />
-      <br />
-      {/* Todos List */}
-      <ul>{renderTodoItems(filteredTodos)}</ul>;
+    <div className="todosContainer">
+      <div className="todosBox">
+        <h1 className="todosHeader">Todos</h1>
+
+        {/* Add */}
+        <input
+          type="text"
+          value={newTodoName}
+          onChange={(e) => setNewTodoName(e.target.value)}
+          placeholder="New todo"
+          className="inputField"
+        />
+        <button onClick={functionToAddTodo}>Add Todo</button>
+
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Search by ID/title/completion"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="inputField"
+        />
+
+        {/* Sort */}
+        <select
+          onChange={(e) => setOrderCriteria(e.target.value)}
+          value={orderCriteria}
+          className="selectField"
+        >
+          <option value="id">sort by ID</option>
+          <option value="alphabetical">a-z</option>
+          <option value="completed">sort by completion</option>
+          <option value="random">shuffle</option>
+        </select>
+
+        {/* Todos List */}
+        <ul className="todosList">
+          {filteredTodos.map((todo) => (
+            <li key={todo.id} className="todoItem">
+              <span className="todoId">{todo.id}</span>
+              <input
+                type="text"
+                value={todo.title}
+                onChange={(e) => functionToUpdateTodo(todo.id, e.target.value)}
+                className="todoTitleInput"
+              />
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() =>
+                  functionToChangeCompletionStatus(todo.id, todo.completed)
+                }
+                className="todoCheckbox"
+              />
+              <button onClick={() => functionToDeleteTodo(todo.id)}>
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
