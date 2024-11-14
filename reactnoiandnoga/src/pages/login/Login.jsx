@@ -34,7 +34,7 @@ function Login() {
           "loggedInUser",
           JSON.stringify(existingUserInDataBase)
         );
-        setCurrentUser(existingUserInDataBase);
+        setCurrentUser(...existingUserInDataBase);
         navigate("/home");
       }
     } catch (err) {

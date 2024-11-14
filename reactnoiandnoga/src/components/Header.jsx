@@ -19,6 +19,7 @@ function Header() {
       alert("Failed to log out");
     }
   };
+  console.log("currentUser in header: ", currentUser);
 
   return (
     <header className="header-container">

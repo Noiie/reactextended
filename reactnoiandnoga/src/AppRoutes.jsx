@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { CurrentUserContext } from "./context/currentUser";
 
 import Layout from "./components/Layout";
@@ -23,37 +23,45 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="login" element={<LayoutSign />}>
-          <Route index element={<Login />} />
-        </Route>
-
-        <Route path="register" element={<LayoutSign />}>
-          <Route index element={<Register />} />
-          <Route path={`2`} element={<Register2 />} />
-        </Route>
-
-        <Route path="home" element={<Layout />}>
-          <Route index element={<Home />} />
-        </Route>
-
-        <Route path={`users/${currentUser.id}/albums`} element={<Layout />}>
-          <Route index element={<Albums />} />
-          <Route path={`:albumId/photos`} element={<PhotosDetail />} />
-        </Route>
-
-        <Route path={`users/${currentUser.id}/posts`} element={<Layout />}>
-          <Route path="" element={<Posts />}>
-            {/* <Route path={`:postId/comments`} element={<PostComments />} /> */}
+        {!currentUser ? (
+          <Route path="login" element={<LayoutSign />}>
+            <Route index element={<Login />} />
           </Route>
-        </Route>
+        ) : (
+          <>
+            <Route path="login" element={<LayoutSign />}>
+              <Route index element={<Login />} />
+            </Route>
 
-        <Route path={`users/${currentUser.id}/todos`} element={<Layout />}>
-          <Route index element={<Todos />} />
-        </Route>
+            <Route path="register" element={<LayoutSign />}>
+              <Route index element={<Register />} />
+              <Route path={`2`} element={<Register2 />} />
+            </Route>
 
-        <Route path={`users/${currentUser.id}/info`} element={<Layout />}>
-          <Route index element={<Info />} />
-        </Route>
+            <Route path="home" element={<Layout />}>
+              <Route index element={<Home />} />
+            </Route>
+
+            <Route path={`users/${currentUser.id}/albums`} element={<Layout />}>
+              <Route index element={<Albums />} />
+              <Route path={`:albumId/photos`} element={<PhotosDetail />} />
+            </Route>
+
+            <Route path={`users/${currentUser.id}/posts`} element={<Layout />}>
+              <Route path="" element={<Posts />}>
+                {/* <Route path={`:postId/comments`} element={<PostComments />} /> */}
+              </Route>
+            </Route>
+
+            <Route path={`users/${currentUser.id}/todos`} element={<Layout />}>
+              <Route index element={<Todos />} />
+            </Route>
+
+            <Route path={`users/${currentUser.id}/info`} element={<Layout />}>
+              <Route index element={<Info />} />
+            </Route>
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );
