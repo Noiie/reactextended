@@ -4,7 +4,7 @@ import { NavLink, useSearchParams, Outlet } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUser";
 import { getPosts, getComments } from "../../functions/getRequest";
 import { deleteComment } from "../../functions/deleteRequest";
-import { addComments } from "../../functions/postRequest";
+import { addComments, addPosts } from "../../functions/postRequest";
 import { patchComment } from "../../functions/patchRequest";
 import PostComments from "./PostComments";
 
@@ -16,11 +16,13 @@ function Posts() {
   const [postsVisibility, setPostsVisibility] = useState({});
   const [commentsEditStatus, setCommentsEditStatus] = useState({});
   const [posts, setPosts] = useState([]);
+  console.log("posts: ", posts);
   const [textInput, setTextInput] = useState("");
   const [commentsNames, setCommentsNames] = useState({});
   console.log("commentsNames: ", commentsNames);
   const [commentsBody, setCommentsBody] = useState({});
   console.log("commentsBody: ", commentsBody);
+  const [postsEditStatus, setPhotosEditStatus] = useState({});
 
   const postsFilter = searchParams.get("title");
 
@@ -58,7 +60,12 @@ function Posts() {
     : posts;
 
   if (posts.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <p>It seems that you dont have any posts.</p>
+        <button onClick={handleAddPost}>Add Post</button>
+      </>
+    );
   }
 
   // comments[post.id][0].name
@@ -116,6 +123,8 @@ function Posts() {
               {commentsVisibility[post.id] ? "Hide comments" : "Show comments"}
             </button>
           )}
+          <button onClick={() => handleDeletePost(post.id)}>Delete Post</button>
+          <button onClick={() => handleEditPost(post.id)}>Edit Post</button>
         </div>
 
         {commentsVisibility[post.id] && comments[post.id] && (
@@ -213,9 +222,15 @@ function Posts() {
     );
   });
 
-  async function handleEditComment(commentId) {
+  async function handleEditPost(postId) {}
+
+  async function handleDeletePost(postId) {
+    console.log(postId);
     try {
-      const updatedComment = await patchComment(commentId);
+      console.log(posts);
+      const response = deleteComment(postId);
+      console.log(response);
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -275,9 +290,24 @@ function Posts() {
     setSearchParams({ title: newTextInput });
   }
 
+  async function handleAddPost() {
+    const postTitle = prompt("Title");
+    const postBody = prompt("Body");
+    try {
+      const newPost = await addPosts({
+        title: postTitle,
+        body: postBody,
+        userId: currentUser.id,
+      });
+      console.log("newPost: ", newPost);
+      setPosts((prev) => [...prev, newPost]);
+    } catch (err) {}
+  }
+
   return (
     <div>
       <h3>Your Posts:</h3>
+      <button onClick={handleAddPost}>Add post</button>
       <input
         placeholder="Search for posts..."
         type="text"

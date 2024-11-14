@@ -75,7 +75,12 @@ function Albums() {
     : albums;
 
   if (albums.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <p>It seems that you dont have any albums...</p>
+        <button onClick={handleAddAlbums}>Add Album</button>
+      </>
+    );
   }
 
   const albumsElements = displayedAlbums.map((album) => (
@@ -158,6 +163,7 @@ function Albums() {
         userId: currentUser.id,
       });
       setAlbums((prev) => [...prev, newAlbum]);
+      setTitleText((prev) => ({ ...prev, [newAlbum.id]: title }));
     } catch (err) {
       alert("Could not add the new album");
     }

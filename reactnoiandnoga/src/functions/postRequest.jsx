@@ -47,6 +47,28 @@ export const addPosts = async (obj) => {
   }
 };
 
+export const addPhoto = async (obj) => {
+  const newPhoto = {
+    ...obj,
+  };
+
+  const postOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": `http://localhost:3000/photos`,
+    },
+    body: JSON.stringify(newPhoto),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/photos`, postOptions);
+    if (!response.ok) throw Error("Couldn't add photo");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
 export const addAlbums = async (obj) => {
   const newAlbum = {
     ...obj,

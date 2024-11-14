@@ -24,9 +24,15 @@ function AppRoutes() {
     <BrowserRouter>
       <Routes>
         {!currentUser ? (
-          <Route path="login" element={<LayoutSign />}>
-            <Route index element={<Login />} />
-          </Route>
+          <>
+            <Route path="login" element={<LayoutSign />}>
+              <Route index element={<Login />} />
+            </Route>
+            <Route path="register" element={<LayoutSign />}>
+              <Route index element={<Register />} />
+              <Route path={`2`} element={<Register2 />} />
+            </Route>
+          </>
         ) : (
           <>
             <Route path="login" element={<LayoutSign />}>

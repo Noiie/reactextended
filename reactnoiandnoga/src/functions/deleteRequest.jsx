@@ -102,3 +102,24 @@ export async function deleteUser(id) {
     return err.message;
   }
 }
+
+export async function deletePost(id) {
+  const postOptions = {
+    method: "DELETE",
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/posts/${id}`,
+      postOptions
+    );
+    if (!response.ok) {
+      throw new Error("couldn't delete post");
+    } else {
+      return "Post deleted successfully";
+    }
+  } catch (err) {
+    console.log(err.message);
+    return err.message;
+  }
+}

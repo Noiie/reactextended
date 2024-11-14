@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { getUserAtLogin } from "../../functions/getRequest";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUser";
 
 import "../../register.css";
@@ -32,7 +32,7 @@ function Login() {
         alert("Login successful");
         localStorage.setItem(
           "loggedInUser",
-          JSON.stringify(existingUserInDataBase)
+          JSON.stringify(...existingUserInDataBase)
         );
         setCurrentUser(...existingUserInDataBase);
         navigate("/home");
@@ -71,6 +71,7 @@ function Login() {
           <br />
           <button type="submit">Login</button>
         </form>
+        <NavLink to="/register">Aren't a member? press to register...</NavLink>
       </div>
     </div>
   );

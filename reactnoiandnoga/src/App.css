@@ -19,6 +19,7 @@
 
 main {
   flex-grow: 1;
+  /* overflow: scroll; */
 }
 
 #logo {
@@ -148,8 +149,8 @@ main {
 
 footer {
   background-color: #fff0cb;
-  position: fixed;
-  bottom: 0px;
+  /* position: fixed;
+  bottom: 0px; */
   width: 100%;
   height: 75px;
   display: flex;

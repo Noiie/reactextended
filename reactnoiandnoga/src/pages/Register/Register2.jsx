@@ -39,7 +39,13 @@ function RegisterInfo() {
       try {
         const updatedUser = await patchUserInfo(currentUser.id, updatedInfo);
         console.log(updatedInfo);
+
         if (updatedUser) {
+          setCurrentUser(updatedUser);
+          window.localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify(updatedUser)
+          );
           alert(`Welcome ${name}`);
           navigate("/home");
         } else {
