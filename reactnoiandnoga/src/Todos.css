@@ -25,16 +25,6 @@
   text-align: center;
 }
 
-.todosHeader {
-  color: #4c7031;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  background: burlywood;
-  padding: 0.5rem;
-  border-radius: 5px;
-  width: 100%;
-}
-
 .inputField,
 .selectField {
   width: 100%;

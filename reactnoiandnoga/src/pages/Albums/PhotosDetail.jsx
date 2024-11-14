@@ -6,7 +6,7 @@ import {
   Link,
   useParams,
 } from "react-router-dom";
-
+import "../../photosalbums.css";
 import { CurrentUserContext } from "../../context/currentUser";
 import {
   getPosts,
@@ -141,10 +141,11 @@ function PhotosDetail() {
   // setTimeout(() => console.log(albumTitle), 1000);
 
   return (
-    <div>
-      <p>Photos of Album {albumTitle}</p>
+    <div className="photosContainer">
       <div>{photoElements}</div>
-      <button onClick={handleLoadMorePhotos}>Load more photos...</button>
+      <button className="loadMoreButton" onClick={handleLoadMorePhotos}>
+        Load more photos...
+      </button>
     </div>
   );
 }

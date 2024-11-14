@@ -7,7 +7,7 @@ import {
   NavLink,
   useSearchParams,
 } from "react-router-dom";
-
+import "../../Albums.css";
 import { CurrentUserContext } from "../../context/currentUser";
 import { patchAlbum } from "../../functions/patchRequest";
 import {
@@ -164,33 +164,90 @@ function Albums() {
   }
 
   return (
-    <div id="Albums">
-      <h1>Your albums:</h1>
+    <div className="albumsContainer">
+      <div className="albumsBox">
+        <button onClick={handleAddAlbums}>Add album</button>
 
-      <button onClick={handleAddAlbums}>Add album</button>
+        <form action="GET">
+          <input
+            placeholder="Search for albums..."
+            type="text"
+            value={inputText}
+            onChange={handleChange}
+            className="inputField"
+          />
+        </form>
 
-      <form action="GET">
-        <input
-          placeholder="Search for albums..."
-          type="text"
-          value={inputText}
-          onChange={handleChange}
-        />
-      </form>
+        {showResults && <h3>Results for {inputText}...</h3>}
+        {showResults && (
+          <button
+            onClick={() => {
+              setSearchParams((prevParams) => prevParams.delete("title"));
+              setShowResults(false);
+            }}
+          >
+            clear filter
+          </button>
+        )}
 
-      {showResults && <h3>Results for {inputText}...</h3>}
-      {showResults && (
-        <button
-          onClick={() => {
-            setSearchParams((prevParams) => prevParams.delete("title"));
-            setShowResults(false);
-          }}
-        >
-          clear filter
-        </button>
-      )}
-
-      <div className="albums-container">{albumsElements}</div>
+        <div className="albumsList">
+          {displayedAlbums.map((album) => (
+            <div key={`album-${album.id}`} className="albumItem">
+              <NavLink
+                to={`${album.id}/photos`}
+                className={`album-container ${
+                  albumsEditStatus[album.id] ? "disabled" : ""
+                }`}
+                onClick={(e) => {
+                  if (albumsEditStatus[album.id]) e.preventDefault();
+                }}
+              >
+                <div className="albumDetails">
+                  {albumsEditStatus[album.id] ? (
+                    <p>
+                      Title:{" "}
+                      <input
+                        type="text"
+                        value={titleText[album.id]}
+                        onChange={(e) => {
+                          setTitleText((prev) => ({
+                            ...prev,
+                            [album.id]: e.target.value,
+                          }));
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          setAlbumsEditStatus((prev) => ({
+                            ...prev,
+                            [album.id]: false,
+                          }));
+                          const newTitle = titleText[album.id];
+                          patchAlbum(album.id, { title: newTitle });
+                        }}
+                      >
+                        Save
+                      </button>
+                    </p>
+                  ) : (
+                    <p className="albumTitle">Title: {titleText[album.id]}</p>
+                  )}
+                  <p className="albumId">Id: {album.id}</p>
+                </div>
+                <img src={albumIcon} alt="album icon" className="albumIcon" />
+              </NavLink>
+              <div className="albumButtons">
+                <button onClick={() => handleDeleteAlbums(album.id)}>
+                  Delete album
+                </button>
+                <button onClick={() => handleEditAlbums(album.id)}>
+                  Edit album
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

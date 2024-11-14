@@ -162,8 +162,6 @@ function Todos() {
   return (
     <div className="todosContainer">
       <div className="todosBox">
-        <h1 className="todosHeader">Todos</h1>
-
         {/* Add */}
         <input
           type="text"

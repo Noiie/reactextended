@@ -7,6 +7,7 @@ import { deleteComment } from "../../functions/deleteRequest";
 import { addComments } from "../../functions/postRequest";
 import { patchComment } from "../../functions/patchRequest";
 import PostComments from "./PostComments";
+import "../../posts.css";
 
 function Posts() {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -276,16 +277,17 @@ function Posts() {
   }
 
   return (
-    <div>
-      <h3>Your Posts:</h3>
-      <input
-        placeholder="Search for posts..."
-        type="text"
-        value={textInput}
-        onChange={handleInputChange}
-      />
-      <div className="All-posts-container">
-        <div>{postsElements}</div>
+    <div className="postsContainer">
+      <div className="postsBox">
+        <h3 className="postsHeader">Your Posts:</h3>
+        <input
+          placeholder="Search for posts..."
+          type="text"
+          value={textInput}
+          onChange={handleInputChange}
+          className="inputField"
+        />
+        <div className="All-posts-container">{postsElements}</div>
       </div>
     </div>
   );
