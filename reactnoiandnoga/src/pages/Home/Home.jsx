@@ -9,6 +9,7 @@ import {
   getUsers,
 } from "../../functions/getRequest";
 import { deleteComment } from "../../functions/deleteRequest";
+import { patchComment } from "../../functions/patchRequest";
 
 import { addComments } from "../../functions/postRequest";
 
@@ -20,9 +21,15 @@ function Home() {
   const [comments, setComments] = useState({});
   const [postsVisibility, setPostsVisibility] = useState({});
   const [allUsers, setAllUsers] = useState([]);
-  console.log("comments: ", comments);
+  // console.log("comments: ", comments);
   const [posts, setPosts] = useState([]);
   const [textInput, setTextInput] = useState("");
+  const [commentsEditStatus, setCommentsEditStatus] = useState({});
+
+  const [commentsNames, setCommentsNames] = useState({});
+  console.log("commentsNames: ", commentsNames);
+  const [commentsBody, setCommentsBody] = useState({});
+  // console.log("commentsBody: ", commentsBody);
 
   const postsFilter = searchParams.get("title");
 
@@ -98,6 +105,27 @@ function Home() {
                   ...prev,
                   [post.id]: !prev[post.id],
                 }));
+                setCommentsEditStatus((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = false;
+                    return acc;
+                  }, {}),
+                }));
+                setCommentsNames((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = comment.name;
+                    return acc;
+                  }, {}),
+                }));
+                setCommentsBody((prev) => ({
+                  ...prev,
+                  ...thisComments.reduce((acc, comment) => {
+                    acc[comment.id] = comment.body;
+                    return acc;
+                  }, {}),
+                }));
               }}
             >
               {commentsVisibility[post.id] ? "Hide comments" : "Show comments"}
@@ -119,8 +147,40 @@ function Home() {
                   key={`comment-${comment.id}`}
                   className="comment-container"
                 >
-                  <h5>Name: {comment.name}</h5>
-                  <p>Body: {comment.body}</p>
+                  {commentsEditStatus[comment.id] ? (
+                    <h5>
+                      Name:{" "}
+                      <input
+                        type="text"
+                        value={commentsNames[comment.id]}
+                        onChange={(e) => {
+                          setCommentsNames((prev) => ({
+                            ...prev,
+                            [comment.id]: e.target.value,
+                          }));
+                        }}
+                      />
+                    </h5>
+                  ) : (
+                    <h5>Name: {commentsNames[comment.id]}</h5>
+                  )}
+                  {commentsEditStatus[comment.id] ? (
+                    <h5>
+                      Body:{" "}
+                      <input
+                        type="text"
+                        value={commentsBody[comment.id]}
+                        onChange={(e) => {
+                          setCommentsBody((prev) => ({
+                            ...prev,
+                            [comment.id]: e.target.value,
+                          }));
+                        }}
+                      />
+                    </h5>
+                  ) : (
+                    <h5>Body: {commentsBody[comment.id]}</h5>
+                  )}
                   <p>Email: {comment.email}</p>
                   {currentUser.id == post.userId && (
                     <button
@@ -129,9 +189,36 @@ function Home() {
                       Delete comment
                     </button>
                   )}
-                  {currentUser.email === comment.email && (
-                    <button onClick={() => {}}>Edit comment</button>
-                  )}
+                  {currentUser.email === comment.email &&
+                    !commentsEditStatus[comment.id] && (
+                      <button
+                        onClick={() => {
+                          setCommentsEditStatus((prev) => ({
+                            ...prev,
+                            [comment.id]: true,
+                          }));
+                        }}
+                      >
+                        Edit comment
+                      </button>
+                    )}
+                  {currentUser.email === comment.email &&
+                    commentsEditStatus[comment.id] && (
+                      <button
+                        onClick={() => {
+                          setCommentsEditStatus((prev) => ({
+                            ...prev,
+                            [comment.id]: false,
+                          }));
+                          patchComment(comment.id, {
+                            name: commentsNames[comment.id],
+                            body: commentsBody[comment.id],
+                          });
+                        }}
+                      >
+                        Save
+                      </button>
+                    )}
                 </div>
               );
             })}
@@ -151,13 +238,25 @@ function Home() {
       const response = await addComments({
         postId: thisPostId,
         email: thisEmail,
-        name: commentName,
-        body: commentBody,
+        name: commentName ? commentName : "",
+        body: commentBody ? commentBody : "",
       });
+
       console.log(response);
+      console.log(commentsNames);
+
       setComments((prev) => ({
         ...prev,
         [postId]: [...prev[postId], response],
+      }));
+
+      setCommentsNames((prev) => ({
+        ...prev,
+        [response.id]: commentName, // Add the new comment ID and name
+      }));
+      setCommentsBody((prev) => ({
+        ...prev,
+        [response.id]: commentBody, // Add the new comment ID and body
       }));
     } catch (err) {
       console.error(err);
